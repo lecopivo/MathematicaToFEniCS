@@ -1,0 +1,200 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      6353,        191]
+NotebookOptionsPosition[      6080,        177]
+NotebookOutlinePosition[      6418,        192]
+CellTagsIndexPosition[      6375,        189]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.671800956079657*^9, 3.6718010425557203`*^9}, {
+   3.671802841207323*^9, 3.671802849043058*^9}, {3.671803434546097*^9, 
+   3.671803438755375*^9}, 3.671803615889112*^9, 3.671807240844317*^9}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"<<", " ", 
+   RowBox[{"(", 
+    RowBox[{"FileNameJoin", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"NotebookDirectory", "[", "]"}], ",", 
+       "\"\<MathematicaToFEniCS.m\>\""}], "}"}], "]"}], ")"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"mesh", " ", ":=", " ", "\"\<mesh\>\""}], ";", 
+  RowBox[{"(*", " ", 
+   RowBox[{"string", " ", "used", " ", "to", " ", "describe", " ", "mesh"}], 
+   " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"vars", " ", ":=", " ", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "y"}], "}"}]}], ";", " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"variables", " ", "in", " ", "which", " ", "we", " ", "solve"}], 
+   " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"funs", " ", ":=", " ", 
+   RowBox[{"{", "  ", 
+    RowBox[{"u", ",", "v"}], "}"}]}], ";", " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "unknown", " ", "functions", " ", "we", " ", "want", " ", "to", " ", 
+    "find"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"bcs", " ", ":=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}]}], 
+    "}"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"testFuns", " ", ":=", " ", 
+   RowBox[{"{", 
+    RowBox[{"tu", ",", "tv"}], "}"}]}], ";", " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"test", " ", "functions"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"femSpaces", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\"\<Lagrange\>\"", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Lagrange\>\"", ",", "1"}], "}"}]}], "}"}]}], ";", " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"FEM", " ", "spaces", " ", "of", " ", "functions"}], ",", " ", 
+    RowBox[{"syntax", " ", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"\"\<FEM space name\>\"", ",", "degree"}], "}"}], ",", 
+       "..."}], "}"}]}], ",", " ", 
+    RowBox[{
+     RowBox[{"For", " ", "available", " ", "function", " ", "spaces", " ", 
+      RowBox[{"see", ":", " ", "http", ":"}]}], "//", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"fenicsproject", ".", "org"}], "/", "documentation"}], "/",
+           "dolfin"}], "/", "dev"}], "/", "python"}], "/", "programmers"}], 
+      "-", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"reference", "/", "functions"}], "/", "functionspace"}], "/", 
+       
+       RowBox[{"FunctionSpace", ".", "html"}]}]}]}]}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"weak1", " ", ":=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Grad", "[", 
+      RowBox[{
+       RowBox[{"u", "[", 
+        RowBox[{"x", ",", "y"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}]}], "]"}], ".", 
+     RowBox[{"Grad", "[", 
+      RowBox[{
+       RowBox[{"tu", "[", 
+        RowBox[{"x", ",", "y"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}]}], "]"}]}], " ", "-", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"1", "-", 
+       RowBox[{"v", "[", 
+        RowBox[{"x", ",", "y"}], "]"}]}], ")"}], " ", 
+     RowBox[{"tu", "[", 
+      RowBox[{"x", ",", "y"}], "]"}]}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"weak2", " ", ":=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Grad", "[", 
+      RowBox[{
+       RowBox[{"v", "[", 
+        RowBox[{"x", ",", "y"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}]}], "]"}], ".", 
+     RowBox[{"Grad", "[", 
+      RowBox[{
+       RowBox[{"tv", "[", 
+        RowBox[{"x", ",", "y"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}]}], "]"}]}], " ", "-", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"u", "[", 
+        RowBox[{"x", ",", "y"}], "]"}], "-", "1"}], ")"}], " ", 
+     RowBox[{"tv", "[", 
+      RowBox[{"x", ",", "y"}], "]"}]}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"weakForm", " ", ":=", " ", 
+   RowBox[{"{", 
+    RowBox[{"weak1", ",", "weak2"}], "}"}]}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"GenerateCode", "[", 
+   RowBox[{
+   "\"\<laplace.py\>\"", ",", "mesh", ",", "vars", ",", "funs", ",", "bcs", 
+    ",", "testFuns", ",", "femSpaces", ",", "weakForm"}], "]"}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.671803619706078*^9, 3.671803628332408*^9}, {
+   3.6718068554851723`*^9, 3.671806868354331*^9}, 3.6718072054667053`*^9, {
+   3.6718072603774557`*^9, 3.671807293992586*^9}, {3.67180823687263*^9, 
+   3.671808249434279*^9}, {3.671808292043992*^9, 3.6718083311888647`*^9}, {
+   3.671808656073916*^9, 3.6718086577619762`*^9}, {3.671809027442739*^9, 
+   3.671809060219213*^9}, 3.671809095738151*^9, {3.6718092401516657`*^9, 
+   3.671809254534767*^9}, {3.6718093227914143`*^9, 3.671809460969469*^9}}]
+},
+WindowSize->{1567, 1003},
+WindowMargins->{{Automatic, -301}, {Automatic, 96}},
+FrontEndVersion->"10.0 for Linux x86 (64-bit) (June 27, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 238, 3, 32, "Input"],
+Cell[799, 25, 5277, 150, 363, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)

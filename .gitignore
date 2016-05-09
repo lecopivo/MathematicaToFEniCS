@@ -3,4 +3,5 @@
 
 # These files are automaticaly generated, thus they do not need to be included
 Laplace.py
+Laplace1D.py
 NavierStokes.py

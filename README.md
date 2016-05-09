@@ -11,14 +11,14 @@ The reason for this package is following. I can write down the equations in Math
 # Tracker
 
 
-1. [ ] Be able to solve Laplace equation
+1. [x] Be able to solve Laplace equation
    - [x] Be able to specify unknown function and corresponding test function. Also specify used finite element space.
    - [x] Specify weak form.
    - [x] Specify Dirichlet boundary conditions - But can do only constant boundary conditions
-   - [ ] Generate complete runnable program
+   - [x] Generate complete runnable program
 
-2. [ ] Write tutorial how to use it and the first unit test based on the previous
-   - [ ] test with one unknown function - Laplace equation
+2. [ ] POSTPONED - Can be bothered right now- Write tutorial how to use it and the first unit test based on the previous
+   - [ ] CANCELED - To much hassle to add support for one unknown function, therfore you have to solve systems of equations - test with one unknown function - Laplace equation
    - [ ] test with one varialble
 
 3. [ ] Test with static Navier-Stokes in cylindrical coordinates - DO NOT FORGET ABOUT THE JACOBIAN IN THE WEAK FORM

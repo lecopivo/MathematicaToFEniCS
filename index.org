@@ -1,0 +1,29 @@
+#+TITLE:     MathematiceToFEniCS
+#+AUTHOR:    Tomáš Skřivan
+#+EMAIL:     (concat "skrivantomas" at-sign "seznam.cz")
+#+DATE:      2016-05-10
+#+LANGUAGE:  en
+#+OPTIONS:   H:4 num:nil toc:2
+
+#+SETUPFILE: ~/Documents/org-html-themes/setup/theme-readtheorg.setup
+
+#+begin_html
+<div class="right">
+  <a href="https://github.com/lecopivo/MathematicaToFEniCS"> Edit on GitHub</a>
+</div>
+#+end_html
+
+-----
+
+* Introduction 							       
+  :PROPERTIES:
+  :CATEGORY: intro
+  :END:
+
+Test of math equation
+\begin{align}
+\int e^{-x^2} \, dx
+\end{align}
+
+
+

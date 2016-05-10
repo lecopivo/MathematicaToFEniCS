@@ -17,15 +17,16 @@ The reason for this package is following. I can write down the equations in Math
    - [x] Specify Dirichlet boundary conditions - But can do only constant boundary conditions
    - [x] Generate complete runnable program
 
-2. [ ] POSTPONED: Can be bothered right now
-   Write tutorial how to use it and the first unit test based on the previous
+2. [ ] Write tutorial how to use it and the first unit test based on the previous
+       POSTPONED: Can be bothered right now	
    - [ ] CANCELED: To much hassle to add support for one unknown function, therfore you have to solve systems of equations.
-     test with one unknown function - Laplace equation
+       	 test with one unknown function - Laplace equation
    - [x] test with one varialble
 
-3. [ ] Test with static Navier-Stokes in cylindrical coordinates - DO NOT FORGET ABOUT THE JACOBIAN IN THE WEAK FORM
-   - [ ] Write the test
+3. [x] Test with static Navier-Stokes in cylindrical coordinates
+   - [x] Write the test
    - [ ] Write tutorial
+         POSTPONED: Can be bothered right now		
 
 4. [ ] More advanced boundary conditions
    - [ ] Neuman boundary conditions

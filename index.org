@@ -9,7 +9,7 @@
 
 #+begin_html
 <div class="right">
-  <a href="https://github.com/lecopivo/MathematicaToFEniCS"> Edit on GitHub</a>
+  <a href="https://github.com/lecopivo/MathematicaToFEniCS"> Go to project on GitHub</a>
 </div>
 #+end_html
 

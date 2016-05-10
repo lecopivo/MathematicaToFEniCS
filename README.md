@@ -19,8 +19,7 @@ The reason for this package is following. I can write down the equations in Math
 
 2. [ ] Write tutorial how to use it and the first unit test based on the previous
        POSTPONED: Can be bothered right now	
-   - [ ] CANCELED: To much hassle to add support for one unknown function, therfore you have to solve systems of equations.
-       	 test with one unknown function - Laplace equation
+   - [ ] test with one unknown function - Laplace equation CANCELED: To much hassle to add support for one unknown function, therfore you have to solve systems of equations.
    - [x] test with one varialble
 
 3. [x] Test with static Navier-Stokes in cylindrical coordinates

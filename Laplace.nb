@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      5332,        173]
-NotebookOptionsPosition[      5099,        160]
-NotebookOutlinePosition[      5433,        175]
-CellTagsIndexPosition[      5390,        172]
+NotebookDataLength[      5879,        190]
+NotebookOptionsPosition[      5644,        177]
+NotebookOutlinePosition[      5980,        192]
+CellTagsIndexPosition[      5937,        189]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -112,38 +112,54 @@ Cell[BoxData[{
        RowBox[{
         RowBox[{"reference", "/", "functions"}], "/", "functionspace"}], "/", 
        
-       RowBox[{"FunctionSpace", ".", "html"}]}]}]}]}], " ", 
-   "*)"}]}], "\[IndentingNewLine]", 
+       RowBox[{"FunctionSpace", ".", "html"}]}]}]}]}], " ", "*)"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"weak1", " ", ":=", 
    RowBox[{
     RowBox[{
      RowBox[{"Grad", "[", 
       RowBox[{
-       RowBox[{"u", "@@", "vars"}], ",", "vars"}], "]"}], ".", 
+       RowBox[{"u", "[", 
+        RowBox[{"x", ",", "y"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}]}], "]"}], ".", 
      RowBox[{"Grad", "[", 
       RowBox[{
-       RowBox[{"tu", "@@", "vars"}], ",", "vars"}], "]"}]}], " ", "-", 
+       RowBox[{"tu", "[", 
+        RowBox[{"x", ",", "y"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}]}], "]"}]}], " ", "-", 
     RowBox[{
      RowBox[{"(", 
       RowBox[{"1", "-", 
-       RowBox[{"v", "@@", "vars"}]}], ")"}], " ", 
-     RowBox[{"tu", "@@", "vars"}]}]}]}], ";"}], "\[IndentingNewLine]", 
+       RowBox[{"v", "[", 
+        RowBox[{"x", ",", "y"}], "]"}]}], ")"}], " ", 
+     RowBox[{"tu", "[", 
+      RowBox[{"x", ",", "y"}], "]"}]}]}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"weak2", " ", ":=", 
    RowBox[{
     RowBox[{
      RowBox[{"Grad", "[", 
       RowBox[{
-       RowBox[{"v", "@@", "vars"}], ",", "vars"}], "]"}], ".", 
+       RowBox[{"v", "[", 
+        RowBox[{"x", ",", "y"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}]}], "]"}], ".", 
      RowBox[{"Grad", "[", 
       RowBox[{
-       RowBox[{"tv", "@@", "vars"}], ",", "vars"}], "]"}]}], " ", "-", 
+       RowBox[{"tv", "[", 
+        RowBox[{"x", ",", "y"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}]}], "]"}]}], " ", "-", 
     RowBox[{
      RowBox[{"(", 
       RowBox[{
-       RowBox[{"u", "@@", "vars"}], "-", "1"}], ")"}], " ", 
-     RowBox[{"tv", "@@", "vars"}]}]}]}], ";"}], "\[IndentingNewLine]", 
+       RowBox[{"u", "[", 
+        RowBox[{"x", ",", "y"}], "]"}], "-", "1"}], ")"}], " ", 
+     RowBox[{"tv", "[", 
+      RowBox[{"x", ",", "y"}], "]"}]}]}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"weakForm", " ", ":=", " ", 
    RowBox[{"{", 
@@ -156,10 +172,11 @@ Cell[BoxData[{
     ",", "testFuns", ",", "femSpaces", ",", "weakForm"}], "]"}], 
   ";"}]}], "Input",
  CellChangeTimes->{{3.6718097657313757`*^9, 3.67180976706982*^9}, {
-   3.671810844547821*^9, 3.671810890498699*^9}, 3.671810933404076*^9}]
+   3.671810844547821*^9, 3.671810890498699*^9}, 3.671810933404076*^9, 
+   3.67185298397121*^9, {3.671853028237381*^9, 3.671853056926103*^9}}]
 },
 WindowSize->{1569, 1003},
-WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowMargins->{{167, Automatic}, {Automatic, 0}},
 FrontEndVersion->"10.0 for Linux x86 (64-bit) (June 27, 2014)",
 StyleDefinitions->"Default.nb"
 ]
@@ -174,7 +191,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 4537, 138, 341, "Input"]
+Cell[558, 20, 5082, 155, 363, "Input"]
 }
 ]
 *)

@@ -5,3 +5,7 @@
 Laplace.py
 Laplace1D.py
 NavierStokes.py
+CouetteFlow.py
+CouetteFlowOldroydB.py
+TaylorCouetteFlow.py
+TaylorCouetteFlowOldroydB.py

@@ -104,7 +104,7 @@ SolveAndPlot[funs_]:=
 	       pycSolveAndPlot = {};
 	       AppendTo[pycSolveAndPlot, "solver.solve()"];
 	       AppendTo[pycSolveAndPlot, "" ];
-	       AppendTo[pycSolveAndPlot, StringForm["plot(`1`)",#] ] & /@ funs;
+	       AppendTo[pycSolveAndPlot, StringForm["plot(`1`, title=\"`1`\")",#] ] & /@ funs;
 	       AppendTo[pycSolveAndPlot, "" ];
 	       AppendTo[pycSolveAndPlot, "interactive()" ];
 	       pycSolveAndPlot

@@ -3,7 +3,7 @@ from dolfin import *
 lineMin = 0.1
 lineMax = 1.1
 
-meshLine = IntervalMesh(1000, lineMin, lineMax)
+meshLine = IntervalMesh(5000, lineMin, lineMax)
 
 # Create boundary markers
 boundary_parts = FacetFunction('size_t', meshLine)

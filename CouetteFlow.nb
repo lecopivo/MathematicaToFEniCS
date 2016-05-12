@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      6850,        208]
-NotebookOptionsPosition[      6617,        195]
-NotebookOutlinePosition[      6951,        210]
-CellTagsIndexPosition[      6908,        207]
+NotebookDataLength[      6944,        213]
+NotebookOptionsPosition[      6711,        200]
+NotebookOutlinePosition[      7045,        215]
+CellTagsIndexPosition[      7002,        212]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -126,16 +126,18 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{
    RowBox[{"weak3", " ", "=", " ", 
-    RowBox[{"P", " ", "TP"}]}], ";", " ", 
-   RowBox[{"(*", " ", 
+    RowBox[{"P", " ", "TP"}]}], ";"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
     RowBox[{
-     RowBox[{
-     "Because", " ", "we", " ", "cannot", " ", "solve", " ", "just", " ", 
-      "one", " ", "equation"}], ",", " ", 
-     RowBox[{
-     "we", " ", "have", " ", "to", " ", "add", " ", "this", " ", "trivial", 
-      " ", "equation", " ", "for", " ", "pressure"}]}], " ", "*)"}], 
-   "\[IndentingNewLine]", 
+    "Because", " ", "we", " ", "cannot", " ", "solve", " ", "just", " ", 
+     "one", " ", "equation"}], ",", " ", 
+    RowBox[{
+    "we", " ", "have", " ", "to", " ", "add", " ", "this", " ", "trivial", 
+     " ", "equation", " ", "for", " ", "pressure"}]}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"weakForm", " ", "=", " ", 
     RowBox[{"{", 
      RowBox[{"weak1", ",", "weak3"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
@@ -144,10 +146,12 @@ Cell[BoxData[{
    RowBox[{"Now", " ", "prepare", " ", "to", " ", "generate", " ", "code"}], 
    " ", "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"mesh", " ", ":=", " ", "\"\<meshLine\>\""}], ";", 
+  RowBox[{
+   RowBox[{"mesh", " ", ":=", " ", "\"\<meshLine\>\""}], ";"}], 
   RowBox[{"(*", " ", 
    RowBox[{"string", " ", "used", " ", "to", " ", "describe", " ", "mesh"}], 
-   " ", "*)"}], "\[IndentingNewLine]", 
+   " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{"vars", " ", "=", " ", 
    RowBox[{"{", "y", "}"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -191,7 +195,8 @@ Cell[BoxData[{
  CellChangeTimes->{{3.6718575469096518`*^9, 3.671857674604727*^9}, {
   3.671857720683304*^9, 3.671858191015861*^9}, {3.6718582355548277`*^9, 
   3.671858250141786*^9}, {3.671858295025633*^9, 3.671858407599613*^9}, {
-  3.6718596158047533`*^9, 3.671859616620824*^9}}]
+  3.6718596158047533`*^9, 3.671859616620824*^9}, {3.6718702569278812`*^9, 
+  3.671870257499591*^9}}]
 },
 WindowSize->{1918, 1003},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
@@ -209,7 +214,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 6055, 173, 808, "Input"]
+Cell[558, 20, 6149, 178, 808, "Input"]
 }
 ]
 *)

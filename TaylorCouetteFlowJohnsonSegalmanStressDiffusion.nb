@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     10066,        288]
-NotebookOptionsPosition[      9832,        275]
-NotebookOutlinePosition[     10166,        290]
-CellTagsIndexPosition[     10123,        287]
+NotebookDataLength[     10135,        291]
+NotebookOptionsPosition[      9901,        278]
+NotebookOutlinePosition[     10235,        293]
+CellTagsIndexPosition[     10192,        290]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -144,11 +144,13 @@ Cell[BoxData[{
         RowBox[{"\[DoubleStruckCapitalT]", "  ", ".", " ", 
          RowBox[{"Grad", "[", 
           RowBox[{"TV", ",", "vars", ",", "coordType"}], "]"}]}], "]"}]}], 
-      ")"}], "Jac"}]}], ";", " ", 
-   RowBox[{"(*", " ", 
-    RowBox[{"Please", " ", "notice", " ", "the", " ", "Jacobian", 
-     RowBox[{"(", "Jac", ")"}], " ", "in", " ", "the", " ", "weak", " ", 
-     "form"}], " ", "*)"}], "\[IndentingNewLine]", 
+      ")"}], "Jac"}]}], ";"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"Please", " ", "notice", " ", "the", " ", "Jacobian", 
+    RowBox[{"(", "Jac", ")"}], " ", "in", " ", "the", " ", "weak", " ", 
+    "form"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"weak2", " ", "=", " ", 
     RowBox[{"V", ".", 
      RowBox[{"Grad", "[", 
@@ -271,7 +273,8 @@ Cell[BoxData[{
     ",", "weakForm"}], "]"}], ";"}]}], "Input",
  CellChangeTimes->{{3.671863962433661*^9, 3.671864418886017*^9}, {
   3.6718644662744303`*^9, 3.671864651884313*^9}, {3.671864728684843*^9, 
-  3.671864826105859*^9}, {3.67186491153841*^9, 3.6718650200490627`*^9}}]
+  3.671864826105859*^9}, {3.67186491153841*^9, 3.6718650200490627`*^9}, {
+  3.67187035845087*^9, 3.671870483142725*^9}}]
 },
 WindowSize->{1918, 1003},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
@@ -289,7 +292,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 9270, 253, 1107, "Input"]
+Cell[558, 20, 9339, 256, 1107, "Input"]
 }
 ]
 *)

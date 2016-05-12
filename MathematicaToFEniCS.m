@@ -24,21 +24,34 @@ PointExpression[vars_]:=
 	]
 
 InitializeFunctionSpaces[ funs_ ,testFuns_, femSpaces_,mesh_ ] := 
-	Module[ {distinctFunctionSpaces,femSpacesNames,pycSpaceInitialization,pycFunctionInitialization,CreateFemSpaceName},
+	Module[ {distinctFunctionSpaces,femSpacesNames,pycSpaceInitialization,pycFunctionInitialization,periodicBoundaryString,CreateFemSpaceName,meshFile},
+		
 		(* Make sure that we initialize each space only once *)
 		distinctFunctionSpaces = DeleteDuplicates @ femSpaces;
+		
 		(* Function to convert {"femType",degree} to the function space name *)
 		CreateFemSpaceName[femSpace_] := StringForm["`1``2``3`",functionSpacePrefix,femSpace[[1]],femSpace[[2]]];
 		femSpacesNames = CreateFemSpaceName /@ femSpaces;
+
+		(* Use periodic bounary if mesh file contains symbol "PeriodicBoundary" *)
+		meshFile = FileNameJoin[{NotebookDirectory[],mesh<>".py"}];
+		periodicBoundaryString = If[ FindList[ meshFile, "PeriodicBoundary"] != {}, 
+					    ", constrained_domain=PeriodicBoundary()",
+					    ""];
+		
 		(* Create python command to initialize all function spaces *)
-		pycSpaceInitialization =StringForm[ "`1` = FunctionSpace(`4`, '`2`', `3`)",CreateFemSpaceName[#],#[[1]],#[[2]],mesh ]& /@ distinctFunctionSpaces;
+		pycSpaceInitialization =StringForm[ "`1` = FunctionSpace(`4`, '`2`', `3``5`)",CreateFemSpaceName[#],#[[1]],#[[2]],mesh,periodicBoundaryString]& /@ distinctFunctionSpaces;
+		
 		(* Create python command to initialize space of all spaces *)
 		AppendTo[ pycSpaceInitialization, StringForm[ "`1` = MixedFunctionSpace([`2`])",totalSpaceName, CommaSeparatedStringFromList[femSpacesNames] ] ] ;
+		
 		(* Initialize total function *)
 		pycFunctionInitialization =  {StringForm["`1` = Function( `2` )",totalFunction,totalSpaceName]};
+		
 		(* Split total function to its parts *)
 		AppendTo[pycFunctionInitialization, StringForm["`1` = split(`2`)",CommaSeparatedStringFromList[funs],totalFunction]];
 		AppendTo[pycFunctionInitialization, StringForm["`1` = TestFunctions(`2`)",CommaSeparatedStringFromList[testFuns],totalSpaceName]];
+		
 		(* return all python code lines *)
 		Flatten@{pycSpaceInitialization,pycFunctionInitialization}
 	]

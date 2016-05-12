@@ -1,7 +1,7 @@
 from dolfin import *
 
 lineMin = 0.1
-lineMax = 1.1
+lineMax = 0.4
 
 meshLine = IntervalMesh(5000, lineMin, lineMax)
 

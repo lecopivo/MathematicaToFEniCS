@@ -7,7 +7,6 @@ The goal is not to provide full interface to FEniCS from Mathematica but only ma
 The reason for this package is following. I can write down the equations in Mathematica easily but then writing them down in python can be pain. This can be especially true when I have system of many equations. Also Mathematica provides nice functions how to transform equations to different curvilinear coordinates systems and I do not want to rewrite them down in python by hand.
 
 
-
 # Tracker
 
 
@@ -29,7 +28,7 @@ The reason for this package is following. I can write down the equations in Math
 
 4. [ ] More advanced boundary conditions
    - [ ] Neuman boundary conditions
-   - [ ] Periodic boundary conditions
+   - [x] Periodic boundary conditions
 
 5. [ ] Test mode complex fluids, like Oldroyd-B etc.
 

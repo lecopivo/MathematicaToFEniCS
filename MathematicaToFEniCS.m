@@ -7,8 +7,9 @@ functionSpacePrefix = "funSpace";
 totalSpaceName = "totalSpace";
 totalFunction = "w";
 weakFormName = "F";
-pointName = "ptx";
+pointName = ptx; (* This should not be a string *)
 boundaryFunctionName = "boundary_parts";
+
 
 SymbolSeparatedStringFromList[list_,symbol_] := StringJoin@ (ToString/@ Riffle[list,symbol]);
 (* turns {a,b,c} to "a,b,c" *)
@@ -19,7 +20,8 @@ PlusSeparatedStringFromList[list_] := SymbolSeparatedStringFromList[list,"+"];
 PointExpression[vars_]:= 
 	Module[{n,pycPointExpression},
 	       n=Length[vars];
-	       pycPointExpression = StringForm["`1` = Expression((\"x[0]\",\"x[1]\",\"x[2]\"))",pointName];
+	       pycPointExpression = {StringForm["`1`expr = Expression((\"x[0]\",\"x[1]\",\"x[2]\"))",pointName]};
+	       AppendTo[ pycPointExpression, StringForm["`1` = lambda i: `1`expr[i]",pointName] ];
 	       pycPointExpression
 	]
 
@@ -56,23 +58,39 @@ InitializeFunctionSpaces[ funs_ ,testFuns_, femSpaces_,mesh_ ] :=
 		Flatten@{pycSpaceInitialization,pycFunctionInitialization}
 	]
 
-(* Rules how to remove function arguments from `fun` - Wierd stuff: StringForm does not produce string, so ToString is neccessary *)
-RemoveFunctionArgumentRulesFun[ fun_, vars_] :=
-	{ 
-		ToString@StringForm["`1`(`2`)",fun,CommaSeparatedStringFromList[vars]] -> ToString@StringForm["`1`",fun],
-		ToString@StringForm["(`1`)(`2`)",fun,CommaSeparatedStringFromList[vars] ]->  ToString@StringForm["(`1`)",fun]
-	}
+DefineWeakForm[weakFormName_,weakForm_,funs_] :=
+	Module[{pycWeakFun},
+	       pycWeakFun = {StringForm["def `1`(`2`):",weakFormName, CommaSeparatedStringFromList[funs] ] };
+	       AppendTo[ pycWeakFun, StringForm["\treturn (`1`)*dx", weakForm] ];
+	       AppendTo[ pycWeakFun, "" ];
+	       pycWeakFun
+	]					 
+	
+
 CreateWeakForm[weak_,funs_,testFuns_,vars_] :=
-	Module[{n,removeFunctionArgumentRules,pointRules,rules,weakFormNames,weakCForms,pycWeakForm},
+	Module[{n,pointRules,weakFix,argSequence,removeFunArgRules,weakFormNames,weakCForms,pycWeakForm,haha},
 	       n = Length[vars];
 	       m = Length[weak];
-	       removeFunctionArgumentRules =  Flatten @ (RemoveFunctionArgumentRulesFun[#,vars]& /@ Flatten[{funs,testFuns}]);
-	       pointRules = (ToString@#[[1]] -> ToString@StringForm["`1`[`2`]",pointName,#[[2]]] )  &/@ Transpose[{vars,Range[0,n-1]}];
+	       (* First rename variables to the name given by `pointName` e.g. changes x,y,z to ptx[0],ptx[1],ptx[2] if `pointName`=ptx *)
+	       pointRules = (  #[[1]] ->  pointName[#[[2]]] ) & /@ Transpose[{vars,Range[0,n-1]}];
+
+	       (* Remove function aguments rules *)
+	       argSequence = CommaSeparatedStringFromList[ (ToString @ pointName <> ToString @ StringForm["(`1`)",#]) & /@ Range[0,n-1] ];
+	       removeFunArgRules =Flatten[ {ToString @ StringForm["`1`(`2`)"  ,#,argSequence] -> ToString @ StringForm["`1`"  ,#,argSequence],
+	       				    ToString @ StringForm["(`1`)(`2`)",#,argSequence] -> ToString @ StringForm["(`1`)"  ,#,argSequence] } & /@ Flatten[{funs,testFuns}]];
+
+	       (* Generate names of weak forms *)
 	       weakFormNames = StringForm["`1``2`",weakFormName,#]& /@ Range[1,m];
-	       rules = Flatten @{removeFunctionArgumentRules,pointRules};
-	       weakCForms =StringReplace[ToString@#,rules]&/@(CForm /@ weak);
-	       pycWeakForm =StringForm[  "`1` = (`2`)*dx",#[[1]],#[[2]]]&/@ Transpose[{weakFormNames,weakCForms}];
-	       AppendTo[ pycWeakForm, StringForm["`1` = `2`", weakFormName, PlusSeparatedStringFromList[weakFormNames ] ]];
+
+	       (* Generate CForm of weak forms and remove function arguments *)
+	       weakCForms = ToString /@ (CForm /@ (weak /. pointRules));
+	       (* {removeFunArgRules,weakCForms} *)
+	       weakCForms = StringReplace[#,removeFunArgRules] & /@ weakCForms;
+
+	       (* Generate python code *)
+	       argSequence = StringForm["(`1`)", CommaSeparatedStringFromList[funs] ];
+	       pycWeakForm = Flatten[DefineWeakForm[#[[1]],#[[2]],funs] &  /@ Transpose[{weakFormNames,weakCForms}]];
+	       AppendTo[ pycWeakForm, StringForm["`1` = `2`", weakFormName, PlusSeparatedStringFromList[ (StringForm["`1``2`",#,argSequence])& /@ weakFormNames ] ]];
 	       pycWeakForm
 	]
 
@@ -82,7 +100,7 @@ BCNames[fun_,bc_]:= BCName[fun,#[[2]] ] & /@ bc;
 ConstantBoundaryCond[fun_,funId_,bc_]:=
 	Module[{n,pycBC,bcNames},
 	       n= Length[bc];
-	       pycBC = StringForm[ "`1` = DirichletBC(`2`.sub(`3`), Constant(`4`), `5`, `6`)",BCName[fun,#[[2]] ],totalSpaceName,funId,#[[1]],boundaryFunctionName,#[[2]]]& /@ bc;
+	       pycBC = StringForm[ "`1` = DirichletBC(`2`.sub(`3`), `4`, `5`, `6`)",BCName[fun,#[[2]] ],totalSpaceName,funId,#[[1]],boundaryFunctionName,#[[2]]]& /@ bc;
 	       pycBC
 	]
 ConstantBoundaryConditions[funs_,bcs_]:=
@@ -116,15 +134,15 @@ SolveAndPlot[funs_]:=
 	Module[{pycSolveAndPlot},
 	       pycSolveAndPlot = {};
 	       AppendTo[pycSolveAndPlot, "solver.solve()"];
-	       AppendTo[pycSolveAndPlot, "" ];
-	       AppendTo[pycSolveAndPlot, StringForm["plot(`1`, title=\"`1`\")",#] ] & /@ funs;
-	       AppendTo[pycSolveAndPlot, "" ];
-	       AppendTo[pycSolveAndPlot, "interactive()" ];
+	       (* AppendTo[pycSolveAndPlot, "" ]; *)
+	       (* AppendTo[pycSolveAndPlot, StringForm["plot(`1`, title=\"`1`\")",#] ] & /@ funs; *)
+	       (* AppendTo[pycSolveAndPlot, "" ]; *)
+	       (* AppendTo[pycSolveAndPlot, "interactive()" ]; *)
 	       pycSolveAndPlot
 	];
 
 
-GenerateCode[fileName_,mesh_,vars_,funs_, bcs_,testFuns_,femSpaces_,weakForm_]:=
+GenerateCode[fileName_,mesh_,vars_,funs_, bcs_,testFuns_,femSpaces_,weakForm_,customCode_:{}]:=
 	Module[{code ,WriteListOfString,outFile},
 	       
 	       WriteListOfString[file_,stringList_]:=Module[
@@ -143,10 +161,16 @@ GenerateCode[fileName_,mesh_,vars_,funs_, bcs_,testFuns_,femSpaces_,weakForm_]:=
 	       WriteString[outFile,StringForm["from `1` import *",mesh]];
 	       WriteString[outFile,"\n\n\n"];
 
-	      (* Make some definitions *)
+	       (* Insert custom code *)
+	       WriteString[outFile, "# Custom code\n"];
+	       If[Length[customCode]>0,
+		  WriteListOfString[outFile,customCode[[1]] ]]
+	       WriteString[outFile,"\n\n\n"];
+
+	       (* Make some definitions *)
 	       WriteString[outFile,"# Define few useful expressions\n"];
 	       code = PointExpression[vars];
-	       WriteString[outFile,code];
+	       WriteListOfString[outFile,code];
 	       WriteString[outFile,"\n\n\n"];
 
 	       (* Function space initialization *)
@@ -178,6 +202,13 @@ GenerateCode[fileName_,mesh_,vars_,funs_, bcs_,testFuns_,femSpaces_,weakForm_]:=
 	       code = SolveAndPlot[funs];
 	       WriteListOfString[outFile,code];
 	       WriteString[outFile,"\n\n\n"];
+
+	       (* Insert custom code *)
+	       WriteString[outFile, "# Custom code\n"];
+	       If[Length[customCode]>1,
+		  WriteListOfString[outFile,customCode[[2]] ]]
+	       WriteString[outFile,"\n\n\n"];
+
 	]
 
 

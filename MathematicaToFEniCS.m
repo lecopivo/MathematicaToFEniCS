@@ -104,11 +104,20 @@ DefineWeakForm[weakFormName_,weakForm_,funs_] :=
 	]					 
 
 
-CreateWeakForm[weak_,funs_,testFuns_,vars_] :=
-	Module[{n,funSymbols,pointRules,weakFix,argSequence,removeFunArgRules,weakFormNames,weakCForms,pycWeakForm,haha},
+CreateWeakForm[weakForm_,funs_,testFuns_,vars_] :=
+	Module[{n,m,tm,weak,funSymbols,pointRules,weakFix,argSequence,removeFunArgRules,weakFormNames,weakCForms,pycWeakForm,haha},
 	       
 	       n = Length[vars];
-	       m = Length[weak];
+	       
+	       If[ IntegerQ[Last[weakForm]],
+			    m  = Length[weakForm]-1;
+			    tm = Last[weakForm];
+			    weak = Drop[weakForm,-1];
+			  ,
+			    m = Length[weakForm];
+			    tm = m;
+			    weak = weakForm;
+	       ];
 
 	       (* Get only symbols of functions, i.e. remove the time derivatives *)
 	       funSymbols = Replace[ funs, x_List :> First[x],1];
@@ -141,10 +150,12 @@ CreateWeakForm[weak_,funs_,testFuns_,vars_] :=
 			  tFuns  = testFuns[[#]] & /@ ids; 
 			  timeDerivatives = StringForm["(`1`-`1``2`)*`3`",#[[1]],TimeSuffix[1],#[[2]] ] & /@ Transpose[{dtFuns,tFuns}];
 			  AppendTo[ pycWeakForm, StringForm["`1`TimeDer = 1/Constant(dt)*(`2`)*dx",weakFormName,PlusSeparatedStringFromList[timeDerivatives]] ];
-			  AppendTo[ pycWeakForm, StringForm["`1`CrankNicolson = 0.5*( `2` + `3` )", weakFormName,
-							    PlusSeparatedStringFromList[ (StringForm["`1`(`2`)",#,totalFunction])& /@ weakFormNames],
-							    PlusSeparatedStringFromList[ (StringForm["`1`(`2``3`)",#,totalFunction,TimeSuffix[1]])& /@ weakFormNames] ]];
-			  AppendTo[ pycWeakForm, StringForm["`1`Dynamic = `1`TimeDer + `1`CrankNicolson", weakFormName, PlusSeparatedStringFromList[ (StringForm["`1`(`2`)",#,totalFunction])& /@ weakFormNames ] ]];
+			  AppendTo[ pycWeakForm, StringForm["`1`CrankNicolson = 0.5*( `2` + `3` ) +`4`", weakFormName,
+							    PlusSeparatedStringFromList[ (StringForm["`1`(`2`)",#,totalFunction])& /@ weakFormNames[[1;;tm]] ] /. "" -> "0",
+							    PlusSeparatedStringFromList[ (StringForm["`1`(`2``3`)",#,totalFunction,TimeSuffix[1]])& /@ weakFormNames[[1;;tm]] ] /. "" -> "0",
+							    PlusSeparatedStringFromList[ (StringForm["`1`(`2`)",#,totalFunction])& /@ weakFormNames[[tm+1;;m]] ] /. "" -> " 0"
+						 ]]; (* the rules '""->"0"` are ther for the case when the string is empty but we still need valid mathematical expression *)
+			  AppendTo[ pycWeakForm, StringForm["`1`Dynamic = `1`TimeDer + `1`CrankNicolson", weakFormName ]];
 		   ];
 	       ];
 			       
@@ -221,7 +232,6 @@ SolveAndPlot[fileName_,funs_]:=
 		  
 		  (* Dynamic solve *)
 		  AppendTo[pycSolveAndPlot, "t = 0.0" ];
-		  AppendTo[pycSolveAndPlot, "T = 1.0" ];
 		  AppendTo[pycSolveAndPlot, "while t<T:" ];
 		  AppendTo[pycSolveAndPlot, "\tsolverDynamic.solve()" ];
 		  AppendTo[pycSolveAndPlot, "\t" ];
@@ -235,6 +245,16 @@ SolveAndPlot[fileName_,funs_]:=
 	       ];
 
 	       pycSolveAndPlot
+	];
+
+GenerateConstants[] :=
+	Module[{pycConstants},
+	       pycConstants = {};
+	       If[ timeProblemDegree>0,
+		   AppendTo[pycConstants, "dt = 0.01"];
+		   AppendTo[pycConstants, "T = 1.0" ];
+	       ];
+	       pycConstants
 	];
 
 
@@ -281,11 +301,17 @@ GenerateCode[fileName_String,
 	       WriteString[outFile,StringForm["from `1` import *",mesh]];
 	       WriteString[outFile,"\n\n\n"];
 
+	       (* Constants in code *)
+	       WriteString[outFile,"# Problem constants\n"];
+	       code = GenerateConstants[];
+	       WriteListOfString[outFile,code];
+	       WriteString[outFile,"\n\n\n"];
+
 	       (* Custom initialization code *)
 	       code = GetExtraCode[fileName,"INIT"];
 	       WriteListOfString[outFile,code];
 	       WriteString[outFile,"\n\n\n"];
-
+	       
 	       (* Make some definitions *)
 	       WriteString[outFile,"# Define few useful expressions\n"];
 	       code = PointExpression[vars];

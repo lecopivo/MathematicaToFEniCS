@@ -25,5 +25,7 @@ Test of math equation
 \int e^{-x^2} \, dx
 \end{align}
 
+Test number 2
+
 
 

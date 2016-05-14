@@ -2,9 +2,9 @@ from dolfin import *
 from math import floor
 import mshr
 
-rMin = 0.09
-rMax = 0.1
-height = 0.05
+rMin = 0.1
+rMax = 0.3
+height = 1
 
 N = 20
 NX = N

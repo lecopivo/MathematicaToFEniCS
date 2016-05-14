@@ -1,0 +1,304 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      9741,        295]
+NotebookOptionsPosition[      9324,        275]
+NotebookOutlinePosition[      9658,        290]
+CellTagsIndexPosition[      9615,        287]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"<<", " ", 
+   RowBox[{"(", 
+    RowBox[{"FileNameJoin", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"NotebookDirectory", "[", "]"}], ",", 
+       "\"\<MathematicaToFEniCS.m\>\""}], "}"}], "]"}], ")"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"mesh", " ", ":=", " ", "\"\<mesh\>\""}], ";", 
+   RowBox[{"(*", " ", 
+    RowBox[{"string", " ", "used", " ", "to", " ", "describe", " ", "mesh"}], 
+    " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"vars", " ", ":=", " ", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", "y"}], "}"}]}], ";"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"variables", " ", "in", " ", "which", " ", "we", " ", "solve"}], 
+   " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"funs", " ", ":=", " ", 
+   RowBox[{"{", 
+    RowBox[{"u", ",", "v"}], "}"}]}], ";", " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "unknown", " ", "functions", " ", "we", " ", "want", " ", "to", " ", 
+    "find"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"bcs", " ", ":=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"EXPR1", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", "1"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"EXPR2", ",", "2"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0", ",", "3"}], "}"}]}], "}"}]}], 
+    "}"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"testFuns", " ", ":=", " ", 
+   RowBox[{"{", 
+    RowBox[{"tu", ",", "tv"}], "}"}]}], ";", " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"test", " ", "functions"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"femSpaces", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\"\<Lagrange\>\"", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Lagrange\>\"", ",", "1"}], "}"}]}], "}"}]}], ";", " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"FEM", " ", "spaces", " ", "of", " ", "functions"}], ",", " ", 
+    RowBox[{"syntax", " ", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"\"\<FEM space name\>\"", ",", "degree"}], "}"}], ",", 
+       "..."}], "}"}]}], ",", " ", 
+    RowBox[{
+     RowBox[{"For", " ", "available", " ", "function", " ", "spaces", " ", 
+      RowBox[{"see", ":", " ", "http", ":"}]}], "//", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"fenicsproject", ".", "org"}], "/", "documentation"}], "/",
+           "dolfin"}], "/", "dev"}], "/", "python"}], "/", "programmers"}], 
+      "-", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"reference", "/", "functions"}], "/", "functionspace"}], "/", 
+       
+       RowBox[{"FunctionSpace", ".", "html"}]}]}]}]}], " ", "*)"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"weak1", " ", ":=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"D", "[", 
+       RowBox[{
+        RowBox[{"u", "@@", "vars"}], ",", "t"}], "]"}], ")"}], 
+     RowBox[{"(", 
+      RowBox[{"tu", "@@", "vars"}], ")"}]}], "+", 
+    RowBox[{
+     RowBox[{"Grad", "[", 
+      RowBox[{
+       RowBox[{"u", "@@", "vars"}], ",", "vars"}], "]"}], ".", 
+     RowBox[{"Grad", "[", 
+      RowBox[{
+       RowBox[{"tu", "@@", "vars"}], ",", "vars"}], "]"}]}], " ", "-", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"1", "-", 
+       RowBox[{"v", "@@", "vars"}], " ", "+", " ", "x", " ", "+", " ", "y", 
+       " ", "+", " ", "alpha"}], ")"}], " ", 
+     RowBox[{"tu", "@@", "vars"}]}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"weak2", " ", ":=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Grad", "[", 
+      RowBox[{
+       RowBox[{"v", "@@", "vars"}], ",", "vars"}], "]"}], ".", 
+     RowBox[{"Grad", "[", 
+      RowBox[{
+       RowBox[{"tv", "@@", "vars"}], ",", "vars"}], "]"}]}], " ", "-", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"u", "@@", "vars"}], "-", "1"}], ")"}], " ", 
+     RowBox[{"tv", "@@", "vars"}]}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"weakForm", " ", ":=", " ", 
+   RowBox[{"{", 
+    RowBox[{"weak1", ",", "weak2"}], "}"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"customCode", " ", "=", " ", 
+    RowBox[{"{", " ", "\[IndentingNewLine]", "\t", 
+     RowBox[{
+      RowBox[{"{", " ", 
+       RowBox[{
+       "\"\<EXPR1 = Expression(\\\"x[0]\\\")\>\"", ",", "\[IndentingNewLine]",
+         "\t", "\"\<EXPR2 = Expression(\\\"x[1]\\\")\>\"", ",", 
+        "\[IndentingNewLine]", "\t", "\"\<alpha = Constant(1.0)\>\""}], "}"}],
+       ",", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<plot(u)\>\"", ",", "\[IndentingNewLine]", "\"\<plot(v)\>\"", ",", 
+        "\[IndentingNewLine]", "\"\<e1 = Constant((1,0))\>\"", ",", 
+        "\[IndentingNewLine]", "\"\<e2 = Constant((0,1))\>\"", ",", 
+        "\[IndentingNewLine]", "\"\<plot(e1*u+e2*v)\>\"", ",", 
+        "\[IndentingNewLine]", "\"\<interactive()\>\""}], "}"}]}], 
+     "\[IndentingNewLine]", "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"GenerateCode", "[", 
+   RowBox[{
+   "\"\<HeatEquation.py\>\"", ",", "mesh", ",", "vars", ",", "funs", ",", 
+    "bcs", ",", "testFuns", ",", "femSpaces", ",", "weakForm", ",", 
+    "customCode"}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.672109893093437*^9, 3.6721100257354527`*^9}, {
+  3.6721101017581797`*^9, 3.672110114460205*^9}, {3.672110149220251*^9, 
+  3.672110151401062*^9}, {3.672111707745123*^9, 3.6721117086968737`*^9}, {
+  3.672111753233182*^9, 3.672111787581956*^9}, {3.67211271838062*^9, 
+  3.67211271916525*^9}},
+ EmphasizeSyntaxErrors->True],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"x", ",", "y"}], "}"}]], "Output",
+ CellChangeTimes->{{3.672110019829529*^9, 3.67211002925779*^9}, {
+  3.6721101409797907`*^9, 3.672110155928583*^9}, {3.672111288806018*^9, 
+  3.672111296398736*^9}, {3.672111696673863*^9, 3.6721117177542963`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Solve", "[", 
+  RowBox[{
+   RowBox[{"weak1", "\[Equal]", "0"}], ",", "alpha"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6721101379368277`*^9, 3.672110138680114*^9}, {
+  3.672110176795185*^9, 3.672110214762149*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"{", 
+   RowBox[{"alpha", "\[Rule]", 
+    FractionBox[
+     RowBox[{
+      RowBox[{"-", 
+       RowBox[{"tu", "[", 
+        RowBox[{"x", ",", "y", ",", "t"}], "]"}]}], "-", 
+      RowBox[{"x", " ", 
+       RowBox[{"tu", "[", 
+        RowBox[{"x", ",", "y", ",", "t"}], "]"}]}], "-", 
+      RowBox[{"y", " ", 
+       RowBox[{"tu", "[", 
+        RowBox[{"x", ",", "y", ",", "t"}], "]"}]}], "+", 
+      RowBox[{
+       RowBox[{"tu", "[", 
+        RowBox[{"x", ",", "y", ",", "t"}], "]"}], " ", 
+       RowBox[{"v", "[", 
+        RowBox[{"x", ",", "y", ",", "t"}], "]"}]}], "+", 
+      RowBox[{
+       RowBox[{"tu", "[", 
+        RowBox[{"x", ",", "y", ",", "t"}], "]"}], " ", 
+       RowBox[{
+        SuperscriptBox["u", 
+         TagBox[
+          RowBox[{"(", 
+           RowBox[{"0", ",", "0", ",", "1"}], ")"}],
+          Derivative],
+         MultilineFunction->None], "[", 
+        RowBox[{"x", ",", "y", ",", "t"}], "]"}]}], "+", 
+      RowBox[{
+       RowBox[{
+        SuperscriptBox["tu", 
+         TagBox[
+          RowBox[{"(", 
+           RowBox[{"0", ",", "1", ",", "0"}], ")"}],
+          Derivative],
+         MultilineFunction->None], "[", 
+        RowBox[{"x", ",", "y", ",", "t"}], "]"}], " ", 
+       RowBox[{
+        SuperscriptBox["u", 
+         TagBox[
+          RowBox[{"(", 
+           RowBox[{"0", ",", "1", ",", "0"}], ")"}],
+          Derivative],
+         MultilineFunction->None], "[", 
+        RowBox[{"x", ",", "y", ",", "t"}], "]"}]}], "+", 
+      RowBox[{
+       RowBox[{
+        SuperscriptBox["tu", 
+         TagBox[
+          RowBox[{"(", 
+           RowBox[{"1", ",", "0", ",", "0"}], ")"}],
+          Derivative],
+         MultilineFunction->None], "[", 
+        RowBox[{"x", ",", "y", ",", "t"}], "]"}], " ", 
+       RowBox[{
+        SuperscriptBox["u", 
+         TagBox[
+          RowBox[{"(", 
+           RowBox[{"1", ",", "0", ",", "0"}], ")"}],
+          Derivative],
+         MultilineFunction->None], "[", 
+        RowBox[{"x", ",", "y", ",", "t"}], "]"}]}]}], 
+     RowBox[{"tu", "[", 
+      RowBox[{"x", ",", "y", ",", "t"}], "]"}]]}], "}"}], "}"}]], "Output",
+ CellChangeTimes->{{3.672110139365938*^9, 3.6721101430640574`*^9}, {
+  3.672110186284789*^9, 3.6721102150454073`*^9}}]
+}, Open  ]]
+},
+WindowSize->{1918, 1003},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"10.0 for Linux x86 (64-bit) (June 27, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 5900, 163, 605, "Input"],
+Cell[6483, 187, 286, 5, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6806, 197, 237, 5, 32, "Input"],
+Cell[7046, 204, 2262, 68, 55, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

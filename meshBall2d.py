@@ -7,7 +7,7 @@ radius = 0.05
 L = 1.6
 W = 0.41
 geometry =  mshr.Rectangle(Point(0.0,0.0), Point(L, W)) \
-           -mshr.Circle(center, radius, 10)
+           -mshr.Circle(center, radius, 20)
 
 # Build mesh
 meshBall2d = mshr.generate_mesh(geometry, 100)

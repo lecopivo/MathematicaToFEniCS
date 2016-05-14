@@ -1,6 +1,6 @@
 from dolfin import *
 
-meshBox = UnitSquareMesh(20, 20)
+meshBox = UnitSquareMesh(4, 4)
 
 # Create boundary markers
 boundary_parts = FacetFunction('size_t', meshBox)

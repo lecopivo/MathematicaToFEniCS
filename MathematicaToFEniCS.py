@@ -17,22 +17,29 @@ def Abs(x):
     return abs(x)
 
 class DerivativeClass:
-    n = None               # Derivative to n-th component
+    nx = None
+    ny = None
+    nz = None
+    
     def __init__(self,x,y=0,z=0):
-        n = x+y+z
-
-        if n==1:
-            if x==1:
-                self.n = 0
-            if y==1:
-                self.n = 1
-            if z==1:
-                self.n = 2
-
+        self.nx = x
+        self.ny = y
+        self.nz = z
             
+    def differentiate(self,x,y,z,fun):
+        if x>0:
+            return self.differentiate(x-1,y,z, Dx(fun,0))
+        if y>0:
+            return self.differentiate(x,y-1,z, Dx(fun,1))
+        if z>0:
+            return self.differentiate(x,y,z-1, Dx(fun,2))
+
+        return fun
+                
     def __call__(self,fun):
-        return Dx(fun,self.n)
+        return self.differentiate(self.nx,self.ny,self.nz,fun)
 
 def Derivative(x,y=0,z=0):
     return DerivativeClass(x,y,z)
+
 

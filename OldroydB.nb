@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     12420,        343]
-NotebookOptionsPosition[     12112,        328]
-NotebookOutlinePosition[     12446,        343]
-CellTagsIndexPosition[     12403,        340]
+NotebookDataLength[     12530,        348]
+NotebookOptionsPosition[     12222,        333]
+NotebookOutlinePosition[     12556,        348]
+CellTagsIndexPosition[     12513,        345]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -150,17 +150,18 @@ Cell[BoxData[{
    "Navier", " ", "stokes", " ", "equation", " ", "in", " ", "weak", " ", 
     "form"}], "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"weak1", "=", 
-   RowBox[{
-    RowBox[{"(", 
-     RowBox[{
-      RowBox[{"\[DoubleStruckCapitalL]", " ", ".", "V", ".", "TV"}], " ", "+",
-       " ", 
-      RowBox[{"Tr", "[", 
-       RowBox[{"\[DoubleStruckCapitalT]", "  ", ".", " ", 
-        RowBox[{"Grad", "[", 
-         RowBox[{"TV", ",", "vars", ",", "coordType"}], "]"}]}], "]"}]}], 
-     ")"}], "Jac"}]}], ";", " ", 
+  RowBox[{
+   RowBox[{"weak1", "=", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"\[DoubleStruckCapitalL]", " ", ".", "V", ".", "TV"}], " ", 
+       "+", " ", 
+       RowBox[{"Tr", "[", 
+        RowBox[{"\[DoubleStruckCapitalT]", "  ", ".", " ", 
+         RowBox[{"Grad", "[", 
+          RowBox[{"TV", ",", "vars", ",", "coordType"}], "]"}]}], "]"}]}], 
+      ")"}], "Jac"}]}], ";"}], " ", 
   RowBox[{"(*", " ", 
    RowBox[{
     RowBox[{"Please", " ", "notice", " ", "the", " ", "Jacobian", 
@@ -168,7 +169,8 @@ Cell[BoxData[{
      "form"}], ",", " ", 
     RowBox[{
     "It", " ", "is", " ", "necessary", " ", "in", " ", "curvilinear", " ", 
-     "coordinates"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+     "coordinates"}]}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{"weak2", " ", "=", " ", 
    RowBox[{"Total", "[", 
     RowBox[{
@@ -209,10 +211,12 @@ Cell[BoxData[{
    " ", "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"mesh", " ", ":=", " ", "\"\<meshBall2d\>\""}], ";", 
-   RowBox[{"(*", " ", 
-    RowBox[{"string", " ", "used", " ", "to", " ", "describe", " ", "mesh"}], 
-    " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"mesh", " ", ":=", " ", "\"\<meshBall2d\>\""}], ";"}], 
+  RowBox[{"(*", " ", 
+   RowBox[{"string", " ", "used", " ", "to", " ", "describe", " ", "mesh"}], 
+   " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"vars", " ", "=", " ", "spVars"}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -321,7 +325,8 @@ Cell[BoxData[{
    3.672169001924672*^9, 3.672169028210967*^9}, {3.672169066397747*^9, 
    3.672169091466432*^9}, 3.6721693287916517`*^9, {3.672175023874827*^9, 
    3.6721750255695877`*^9}, {3.6721814485415783`*^9, 3.672181461229892*^9}, {
-   3.6721817786849537`*^9, 3.672181778791905*^9}}],
+   3.6721817786849537`*^9, 3.672181778791905*^9}, {3.673202169063888*^9, 
+   3.6732021712532187`*^9}}],
 
 Cell[BoxData[""], "Input",
  CellChangeTimes->{{3.6721595459061823`*^9, 3.672159546517679*^9}}]
@@ -343,8 +348,8 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[558, 20, 89, 1, 32, "Input"],
-Cell[650, 23, 11361, 300, 1239, "Input"],
-Cell[12014, 325, 94, 1, 32, "Input"]
+Cell[650, 23, 11471, 305, 1272, "Input"],
+Cell[12124, 330, 94, 1, 32, "Input"]
 }
 ]
 *)

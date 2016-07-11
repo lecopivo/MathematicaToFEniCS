@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     10135,        291]
-NotebookOptionsPosition[      9901,        278]
-NotebookOutlinePosition[     10235,        293]
-CellTagsIndexPosition[     10192,        290]
+NotebookDataLength[     10229,        296]
+NotebookOptionsPosition[      9995,        283]
+NotebookOutlinePosition[     10329,        298]
+CellTagsIndexPosition[     10286,        295]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -199,10 +199,12 @@ Cell[BoxData[{
            RowBox[{
            "\[DoubleStruckCapitalA]", "-", "\[DoubleStruckCapitalI]"}], 
            ")"}]}], ")"}], ".", "t\[DoubleStruckCapitalA]"}], " ", "+", 
-       "stressDiffustionTerm"}], " ", "]"}], " ", "Jac"}]}], ";", " ", 
-   RowBox[{"(*", " ", 
-    RowBox[{"Equation", " ", "for", " ", "conformation", " ", "tensors"}], 
-    " ", "*)"}], "\[IndentingNewLine]", 
+       "stressDiffustionTerm"}], " ", "]"}], " ", "Jac"}]}], ";"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"Equation", " ", "for", " ", "conformation", " ", "tensors"}], " ",
+    "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"weakForm", " ", "=", " ", 
     RowBox[{"{", 
      RowBox[{"weak1", ",", "weak3"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
@@ -211,10 +213,12 @@ Cell[BoxData[{
    RowBox[{"Now", " ", "prepare", " ", "to", " ", "generate", " ", "code"}], 
    " ", "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"mesh", " ", ":=", " ", "\"\<meshLine\>\""}], ";", 
+  RowBox[{
+   RowBox[{"mesh", " ", ":=", " ", "\"\<meshLine\>\""}], ";"}], 
   RowBox[{"(*", " ", 
    RowBox[{"string", " ", "used", " ", "to", " ", "describe", " ", "mesh"}], 
-   " ", "*)"}], "\[IndentingNewLine]", 
+   " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{"vars", " ", "=", " ", 
    RowBox[{"{", "\[Rho]", "}"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -268,13 +272,14 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{"GenerateCode", "[", 
    RowBox[{
-   "\"\<TaylorCouetteFlowJohnsonSegalmanStressDiffusion.py\>\"", ",", "mesh", 
+   "\"\<TaylorCouetteFlowJohnsonSegalmanStressDiffusion\>\"", ",", "mesh", 
     ",", "vars", ",", "funs", ",", "bcs", ",", "testFuns", ",", "femSpaces", 
     ",", "weakForm"}], "]"}], ";"}]}], "Input",
  CellChangeTimes->{{3.671863962433661*^9, 3.671864418886017*^9}, {
   3.6718644662744303`*^9, 3.671864651884313*^9}, {3.671864728684843*^9, 
   3.671864826105859*^9}, {3.67186491153841*^9, 3.6718650200490627`*^9}, {
-  3.67187035845087*^9, 3.671870483142725*^9}}]
+  3.67187035845087*^9, 3.671870483142725*^9}, {3.673199084900449*^9, 
+  3.673199085185408*^9}}]
 },
 WindowSize->{1918, 1003},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
@@ -292,7 +297,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 9339, 256, 1107, "Input"]
+Cell[558, 20, 9433, 261, 1140, "Input"]
 }
 ]
 *)

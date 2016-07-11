@@ -11,7 +11,7 @@ pointName = ptx; (* This should not be a string *)
 boundaryFunctionName = "boundary_parts";
 
 (* Internal variables *)
-(* timeProblemDegree = 0; *)
+timeProblemDegree = 0;
 
 TimeSuffix[0] := ""
 TimeSuffix[n_] := TimeSuffix[n-1]<>"0"
@@ -357,3 +357,4 @@ GenerateCode[fileName_String,
 
 
 EndPackage[]
+

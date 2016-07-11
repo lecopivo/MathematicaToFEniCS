@@ -3,8 +3,22 @@ from MathematicaToFEniCS import *
 from meshTaylorCouette2d import *
 
 
+# Problem constants
+dt = 0.01
+T = 1.0
+
+
+# initialization code
+import os
+dt = elementSize/0.01
+T = 1000.0
+print "Dt is set to {0}".format(dt)
+bcVel = Expression("V",V=1.0)
+
+
 # Define few useful expressions
-ptx = Expression(("x[0]","x[1]","x[2]"))
+ptxExpr = Expression(("x[0]","x[1]","x[2]"))
+ptx = lambda i: ptxExpr[i]
 
 
 # Initialize function spaces and functions
@@ -12,46 +26,103 @@ funSpaceCG2 = FunctionSpace(meshTaylorCouette2d, 'CG', 2, constrained_domain=Per
 funSpaceCG1 = FunctionSpace(meshTaylorCouette2d, 'CG', 1, constrained_domain=PeriodicBoundary())
 totalSpace = MixedFunctionSpace([funSpaceCG2,funSpaceCG2,funSpaceCG2,funSpaceCG1])
 w = Function( totalSpace )
+w0 = Function( totalSpace )
 vr,vt,vz,p = split(w)
+vr0,vt0,vz0,p0 = split(w0)
 tvr,tvt,tvz,tp = TestFunctions(totalSpace)
 
 
 # Define weak form
-F1 = (ptx[0]*((tvr*(-p + vr/(500.*ptx[0])))/ptx[0] + (Derivative(0,1)(tvt)*Derivative(0,1)(vt))/1000. + Derivative(0,1)(tvz)*(-p + Derivative(0,1)(vz)/500.) + Derivative(1,0)(tvr)*(-p + Derivative(1,0)(vr)/500.) + tvr*(-(Power(vt,2)/ptx[0]) + vz*Derivative(0,1)(vr) + vr*Derivative(1,0)(vr)) - (tvt*(-(vt/ptx[0]) + Derivative(1,0)(vt)))/(1000.*ptx[0]) + (Derivative(1,0)(tvt)*(-(vt/ptx[0]) + Derivative(1,0)(vt)))/1000. + tvt*((vr*vt)/ptx[0] + vz*Derivative(0,1)(vt) + vr*Derivative(1,0)(vt)) + (Derivative(0,1)(tvr)*(Derivative(0,1)(vr) + Derivative(1,0)(vz)))/1000. + (Derivative(1,0)(tvz)*(Derivative(0,1)(vr) + Derivative(1,0)(vz)))/1000. + tvz*(vz*Derivative(0,1)(vz) + vr*Derivative(1,0)(vz))))*dx 
-F2 = (vz*Derivative(0,1)(tp) + vr*Derivative(1,0)(tp))*dx
-F = F1+F2
+def F1(w):
+	vr,vt,vz,p = split(w)
+	return (ptx(0)*((tvr*(-p + vr/(500.*ptx(0))))/ptx(0) + (Derivative(0,1)(tvt)*Derivative(0,1)(vt))/1000. + Derivative(0,1)(tvz)*(-p + Derivative(0,1)(vz)/500.) + Derivative(1,0)(tvr)*(-p + Derivative(1,0)(vr)/500.) + tvr*(-(Power(vt,2)/ptx(0)) + vz*Derivative(0,1)(vr) + vr*Derivative(1,0)(vr)) - (tvt*(-(vt/ptx(0)) + Derivative(1,0)(vt)))/(1000.*ptx(0)) + (Derivative(1,0)(tvt)*(-(vt/ptx(0)) + Derivative(1,0)(vt)))/1000. + tvt*((vr*vt)/ptx(0) + vz*Derivative(0,1)(vt) + vr*Derivative(1,0)(vt)) + (Derivative(0,1)(tvr)*(Derivative(0,1)(vr) + Derivative(1,0)(vz)))/1000. + (Derivative(1,0)(tvz)*(Derivative(0,1)(vr) + Derivative(1,0)(vz)))/1000. + tvz*(vz*Derivative(0,1)(vz) + vr*Derivative(1,0)(vz))))*dx
+
+def F2(w):
+	vr,vt,vz,p = split(w)
+	return (ptx(0)*tp*(vr/ptx(0) + Derivative(0,1)(vz) + Derivative(1,0)(vr)))*dx
+
+FStatic = F1(w)+F2(w)
+FTimeDer = 1/Constant(dt)*((vr-vr0)*tvr+(vt-vt0)*tvt+(vz-vz0)*tvz)*dx
+FCrankNicolson = 0.5*( F1(w) + F1(w0) ) +F2(w)
+FDynamic = FTimeDer + FCrankNicolson
 
 
 # Define boundary conditions
-bc_vr_1 = DirichletBC(totalSpace.sub(0), Constant(0), boundary_parts, 1)
-bc_vr_2 = DirichletBC(totalSpace.sub(0), Constant(0), boundary_parts, 2)
-bc_vt_1 = DirichletBC(totalSpace.sub(1), Constant(1), boundary_parts, 1)
-bc_vt_2 = DirichletBC(totalSpace.sub(1), Constant(0), boundary_parts, 2)
-bc_vz_1 = DirichletBC(totalSpace.sub(2), Constant(0), boundary_parts, 1)
-bc_vz_2 = DirichletBC(totalSpace.sub(2), Constant(0), boundary_parts, 2)
+bc_vr_1 = DirichletBC(totalSpace.sub(0), 0, boundary_parts, 1)
+bc_vr_2 = DirichletBC(totalSpace.sub(0), 0, boundary_parts, 2)
+bc_vt_1 = DirichletBC(totalSpace.sub(1), bcVel, boundary_parts, 1)
+bc_vt_2 = DirichletBC(totalSpace.sub(1), 0, boundary_parts, 2)
+bc_vz_1 = DirichletBC(totalSpace.sub(2), 0, boundary_parts, 1)
+bc_vz_2 = DirichletBC(totalSpace.sub(2), 0, boundary_parts, 2)
 bc = [bc_vr_1,bc_vr_2,bc_vt_1,bc_vt_2,bc_vz_1,bc_vz_2]
 
 
 # Initialize solver
-J = derivative(F,w)
-problem = NonlinearVariationalProblem(F,w,bc,J)
-solver = NonlinearVariationalSolver(problem)
+JStatic = derivative(FStatic,w)
+problemStatic = NonlinearVariationalProblem(FStatic,w,bc,JStatic)
+solverStatic = NonlinearVariationalSolver(problemStatic)
 
-prm = solver.parameters
+prm = solverStatic.parameters
+prm['newton_solver']['absolute_tolerance'] = 1E-8
+prm['newton_solver']['relative_tolerance'] = 1E-7
+prm['newton_solver']['maximum_iterations'] = 10
+prm['newton_solver']['relaxation_parameter'] = 1.0
+
+# Initialize dynamic solver
+JDynamic = derivative(FDynamic,w)
+problemDynamic = NonlinearVariationalProblem(FDynamic,w,bc,JDynamic)
+solverDynamic = NonlinearVariationalSolver(problemDynamic)
+
+prm = solverDynamic.parameters
 prm['newton_solver']['absolute_tolerance'] = 1E-8
 prm['newton_solver']['relative_tolerance'] = 1E-7
 prm['newton_solver']['maximum_iterations'] = 10
 prm['newton_solver']['relaxation_parameter'] = 1.0
 
 
-# Solve and plot
-solver.solve()
-
-plot(vr, title="vr")
-plot(vt, title="vt")
-plot(vz, title="vz")
-plot(p, title="p")
-
+# Initial conditions
+bcVel.V = 0.3
+ic = Expression(("0.01*sin(1.0*3.1415*x[1])", \
+                 "rm*v/(-rM*rM+rm*rm) * x[0] - rM*rM * rm * v /((-rM*rM+rm*rm )*x[0])", \
+                 "0", \
+                 "0"),rm=rMin,rM=rMax,v=bcVel.V)
+#                 "1.0*(x[0]-rm)*(rM-x[0])/((rM-rm)*(rM-rm))", \
+w.assign(interpolate(ic,totalSpace))
+w0.assign(interpolate(ic,totalSpace))
+angularVelocity = bcVel.V / rMin
+TaylorNumber =  angularVelocit**2 *rMin*(rMax-rMin)**3 / 10.0**(-6)
+print 'Taylor number is is {0}'.format( TaylorNumber )
+e1 = Constant((1,0))
+e2 = Constant((0,1))
+vel = e1*vr+e2*vz
+plot(vel, title='velocity', key='a')
+plot(vt, title='vr', key='b')
 interactive()
+fileName = os.path.splitext(__file__)[0]
+vrfile = File("%s.results/vr.pvd" % (fileName))
+vtfile = File("%s.results/vt.pvd" % (fileName))
+vzfile = File("%s.results/vz.pvd" % (fileName))
+
+
+# Solve
+t = 0.0
+while t<T:
+	solverDynamic.solve()
+	
+	# Extra code
+	plot(vel, title='velocity', key='a')
+	plot(vt, title='vr', key='b')
+	#plot(p, title='pressure', key='b')
+	(vr,vt,vz,p) = w.split()
+	vrfile << (vr,t)
+	vtfile << (vt,t)
+	vzfile << (vz,t)
+	angularVelocity = bcVel.V / rMin
+	TaylorNumber =  angularVelocity**2 *rMin*(rMax-rMin)**3 / 10.0**(-6)
+	print 'Times is {0}'.format(t)
+	print 'Taylor number is is {0}'.format( TaylorNumber )
+	
+	t += dt
+	w0.assign(w)
 
 

@@ -10,6 +10,8 @@ N = 20
 NX = N
 NY = int(N * height/(rMax-rMin))
 
+elementSize = (rMax-rMin)/N
+
 #geometry =  mshr.Rectangle(Point(rMin,0.0), Point(rMax, height))
 #meshTaylorCouette2d = mshr.generate_mesh(geometry,N)
 

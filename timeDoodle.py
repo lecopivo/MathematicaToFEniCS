@@ -1,6 +1,6 @@
-from mathematicaFunctions import *
+from MathematicaToFEniCS import *
 from meshBall2d import *
-
+mesh = meshBall2d
 ptx = Expression(("x[0]","x[1]","x[2]"))
 funSpaceCG2 = FunctionSpace(mesh, 'CG', 2)
 funSpaceCG1 = FunctionSpace(mesh, 'CG', 1)

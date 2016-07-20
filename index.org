@@ -115,11 +115,10 @@
     #+end_src
 
     
-    So if you execute notebook ~Laplace1D.nb~ a python script ~Laplace1D.py~ should appear in the same directory and when executed you should see two graphs [[file:img/dolfin_plot_3.png][plot u]] [[file:img/dolfin_plot_4.png][plot v]].
+    So if you execute notebook ~Laplace1D.nb~ a python script ~Laplace1D.py~ should appear in the same directory and when executed you should see two graphs
+    [[file:img/dolfin_plot_3.png]] [[file:img/dolfin_plot_4.png]]
 
 ***** TODO Mention ~Laplace1DExtra.py~
-
-***** TODO Make ~plot u~ and ~plot v~ as embedded images, not as links
 
 ** Oldroyd-B in Taylor-Couette flow
 
@@ -215,10 +214,7 @@
     #+end_src
 
 
-    The generated python script should display these plots [[file:img/dolfin_plot_0.png][plut vt]] [[file:img/dolfin_plot_1.png][plot Art]].
+    The generated python script should display these plots
+    [[file:img/dolfin_plot_0.png]] [[file:img/dolfin_plot_1.png]].
 
 
-    
-
-** 
-** 

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2016-07-20 St 23:16 -->
+<!-- 2016-07-21 Čt 00:43 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="viewport" content="width=device-width, initial-scale=1" />
 <title>MathematiceToFEniCS</title>
@@ -178,9 +178,10 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#orgheadline1">Introduction</a></li>
 <li><a href="#orgheadline2">Installation</a></li>
-<li><a href="#orgheadline8">Examples</a>
+<li><a href="#orgheadline10">Examples</a>
 <ul>
 <li><a href="#orgheadline4">1D Laplace</a></li>
+<li><a href="#orgheadline8">Oldroyd-B in Taylor-Couette flow</a></li>
 </ul>
 </li>
 </ul>
@@ -210,14 +211,12 @@ Just simply download <code>MathematicaToFEniCS</code> with git by command
 </p>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-5">
-<h5 id="orgheadline3"><span class="todo TODO">TODO</span> Mention files which needs to be added to paths for Mathematica and python</h5>
-</div>
+<ul class="org-ul"><li><a id="orgheadline3"></a><span class="todo TODO">TODO</span> Mention files which needs to be added to paths for Mathematica and python<br  /></li></ul>
 </div>
 
-<div id="outline-container-orgheadline8" class="outline-2">
-<h2 id="orgheadline8">Examples</h2>
-<div class="outline-text-2" id="text-orgheadline8">
+<div id="outline-container-orgheadline10" class="outline-2">
+<h2 id="orgheadline10">Examples</h2>
+<div class="outline-text-2" id="text-orgheadline10">
 </div><div id="outline-container-orgheadline4" class="outline-3">
 <h3 id="orgheadline4">1D Laplace</h3>
 <div class="outline-text-3" id="text-orgheadline4">
@@ -319,7 +318,7 @@ Now we define boundary conditions.
 </pre>
 </div>
 <p>
-Symbol <code>bcs</code> has to be a list whose n-th element describes boundary conditions of n-th function and it has to be a list of pairs in the form <code>{value,boundary-id}</code>. So the first function \(u\) has zero boundary condition on boundaries marked with <code>1</code> and <code>2</code>, but the second function \(v\) is zero on the boundary marked with <code>1</code> and \(0.5\) on the boundary marked with <code>2</code>.
+Symbol <code>bcs</code> has to be a list whose n-th element describes boundary conditions of n-th function and it has to be a list of pairs in the form <code>{value,boundary-id}</code>. So the first function \(u\) has zero boundary condition on boundaries marked with <code>1</code> and <code>2</code>, but the second function \(v\) is zero on the boundary marked with <code>1</code> and 0.5 on the boundary marked with <code>2</code>.
 </p>
 
 <p>
@@ -365,12 +364,149 @@ So if you execute notebook <code>Laplace1D.nb</code> a python script <code>Lapla
 <li><a id="orgheadline7"></a><span class="todo TODO">TODO</span> Make <code>plot u</code> and <code>plot v</code> as embedded images, not as links<br  /></li></ul>
 </div>
 </div>
+
+<div id="outline-container-orgheadline8" class="outline-3">
+<h3 id="orgheadline8">Oldroyd-B in Taylor-Couette flow</h3>
+<div class="outline-text-3" id="text-orgheadline8">
+<p>
+Next example is Taylor-Couette flow of Oldroyd-B model.
+</p>
+
+<p>
+The equation for stationary flow of Oldroyd-B are
+</p>
+\begin{align}
+(v \cdot \nabla) v &= \text{div}\, \mathbb{T}\\
+\nabla \cdot  v &= 0 \\
+\mathbb{T} &= - p \mathbb{I} + 2 \mu \mathbb{D} + (\mathbb{A} - \mathbb{I}) \\
+(v\cdot \nabla)\mathbb{A} - \mathbb{LA} - \mathbb{AL}^T &= - (\mathbb{A} - \mathbb{I})
+\end{align}
+
+<p>
+Their weak form is
+</p>
+
+\begin{align}
+0 &= \int (v \cdot \nabla) v \cdot \tilde v + \mathbb{T} : \nabla \tilde v \, dx \\
+0 &= \int v \cdot \nabla \tilde p \, dx \\
+0 &= \int \left(  (v\cdot \nabla)\mathbb{A} - \mathbb{LA} - \mathbb{AL}^T  + \mathbb{A} - \mathbb{I} \right)  :  \tilde A  \, dx
+\end{align}
+
+<p>
+where \(\tilde v,\tilde p, \tilde A\) are test functions.
+</p>
+</div>
+
+<div id="outline-container-orgheadline9" class="outline-4">
+<h4 id="orgheadline9">Mathematica code</h4>
+<div class="outline-text-4" id="text-orgheadline9">
+<p>
+Code for Taylor-Couette flow of Oldroyd-B is <code>/tutorial/TaylorCouetteFlowOldroydB.nb</code>.
+</p>
+
+<p>
+We first say that we want to calculate in cylindrical coordinates and the used variables are \(\rho,\theta,z\), also we define jacobian for cylindrical coordinates.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-matlab">coordType = "Cylindrical";
+vars = {ρ, θ, z};
+Jac = ρ;
+</pre>
+</div>
+
+<p>
+Furthermore we define velocity <code>V</code>, pressure <code>P</code>, conformation tensor <code>𝔸</code> and specify their special forms in Taylor-Couette flow e.g. the only non-zero component of velocity is $&theta;$-component which can depend only on \(\rho\).
+</p>
+<div class="org-src-container">
+
+<pre class="src src-matlab">V    = {0, vt[ρ] , 0};
+TV   = {0, tvt[ρ], 0};
+P    = p[ρ];
+TP   = tp[ρ]; 
+𝔸 =  {
+       {Arr[ρ], Art[ρ], 0},
+       {Art[ρ], Att[ρ], 0},
+       {     0,      0, Azz[ρ]}
+       };
+t𝔸 = {
+       {tArr[ρ], tArt[ρ], 0},
+       {tArt[ρ], tAtt[ρ], 0},
+       {      0,       0, tAzz[ρ]}
+       };
+</pre>
+</div>
+
+
+<p>
+Next we define other useful quantities such as velocity gradient or Cauchy stress tensor
+</p>
+<div class="org-src-container">
+
+<pre class="src src-matlab">𝕃 = Grad[V, vars, coordType];
+𝔻 = 1/2 (𝕃+ Transpose@𝕃);
+𝕀 = IdentityMatrix[3];
+μ = 1;
+𝕋 = -P 𝕀+  2 μ 𝔻+ (𝔸 - 𝕀);
+</pre>
+</div>
+
+
+<p>
+Definitions of weak forms, <code>weak1</code> is momentum equation, <code>weak2</code> is continuity equation and <code>weak3</code> is evolution equation for \(𝔸\). Since continuity equation is automatically satisfied we do not include it to the final list of weak forms <code>weakForm</code>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-matlab">weak1 = (𝕃 .V.TV + Tr[𝕋.Grad[TV, vars,coordType]]) Jac;
+weak2 =  V.Grad[TP, vars,coordType];
+weak3 = Tr[(Grad[𝔸, vars, coordType].V -𝕃. 𝔸 -𝔸.Transpose @𝕃 + (𝔸 - 𝕀)).t𝔸 ] Jac;
+weakForm = {weak1, weak3};
+</pre>
+</div>
+
+
+<p>
+Now we specify mesh used for computation, variable in which we do the numerical computation, unknown functions, boundary conditions - Dirichlet boundary conditions for velocity and no boundary conditions for components of 𝔸, test functions and as last we specify used finite elements.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-matlab">mesh := "meshLine";
+vars = {ρ};
+funs = {vt, Arr, Art, Att, Azz};
+bcs := {
+	{{1, 1}, {0, 2}},
+	{},
+	{},
+	{},
+	{}
+	};
+testFuns := {tvt, tArr, tArt, tAtt, tAzz}; 
+femSpaces = {{"Lagrange", 1}, {"Lagrange", 1}, {"Lagrange", 1}, {"Lagrange", 1},{"Lagrange", 1}};
+</pre>
+</div>
+
+
+<p>
+The last line just generates the python script
+</p>
+<div class="org-src-container">
+
+<pre class="src src-matlab">GenerateCode["TaylorCouetteFlowOldroydB", mesh, vars, funs, bcs, testFuns, femSpaces, weakForm];
+</pre>
+</div>
+
+
+<p>
+The generated python script should display these plots <a href="img/dolfin_plot_0.png">plut vt</a> <a href="img/dolfin_plot_1.png">plot Art</a>.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2016-05-10</p>
 <p class="author">Author: Tomáš Skřivan</p>
-<p class="date">Created: 2016-07-20 St 23:16</p>
+<p class="date">Created: 2016-07-21 Čt 00:43</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

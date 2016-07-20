@@ -27,7 +27,7 @@
   Just simply download ~MathematicaToFEniCS~ with git by command
   =git clone https://github.com/lecopivo/MathematicaToFEniCS=
 
-**** TODO Mention files which needs to be added to paths for Mathematica and python
+***** TODO Mention files which needs to be added to paths for Mathematica and python
 
 * Examples
 
@@ -94,7 +94,7 @@
     {{0, 1}, {0.5, 2}}
     } 
     #+end_src
-    Symbol ~bcs~ has to be a list whose n-th element describes boundary conditions of n-th function and it has to be a list of pairs in the form ~{value,boundary-id}~. So the first function $u$ has zero boundary condition on boundaries marked with ~1~ and ~2~, but the second function $v$ is zero on the boundary marked with ~1~ and $0.5$ on the boundary marked with ~2~.
+    Symbol ~bcs~ has to be a list whose n-th element describes boundary conditions of n-th function and it has to be a list of pairs in the form ~{value,boundary-id}~. So the first function $u$ has zero boundary condition on boundaries marked with ~1~ and ~2~, but the second function $v$ is zero on the boundary marked with ~1~ and 0.5 on the boundary marked with ~2~.
 
     Next we specify which finite elements will be used. ~femSpace~ is list of pairs where n-th pair specifies what type of finite element should be used for n-th function
     #+begin_src matlab
@@ -120,5 +120,105 @@
 ***** TODO Mention ~Laplace1DExtra.py~
 
 ***** TODO Make ~plot u~ and ~plot v~ as embedded images, not as links
+
+** Oldroyd-B in Taylor-Couette flow
+
+   Next example is Taylor-Couette flow of Oldroyd-B model.
+
+   The equation for stationary flow of Oldroyd-B are
+   \begin{align}
+   (v \cdot \nabla) v &= \text{div}\, \mathbb{T}\\
+   \nabla \cdot  v &= 0 \\
+   \mathbb{T} &= - p \mathbb{I} + 2 \mu \mathbb{D} + (\mathbb{A} - \mathbb{I}) \\
+   (v\cdot \nabla)\mathbb{A} - \mathbb{LA} - \mathbb{AL}^T &= - (\mathbb{A} - \mathbb{I})
+   \end{align}
+
+   Their weak form is
+
+   \begin{align}
+   0 &= \int (v \cdot \nabla) v \cdot \tilde v + \mathbb{T} : \nabla \tilde v \, dx \\
+   0 &= \int v \cdot \nabla \tilde p \, dx \\
+   0 &= \int \left(  (v\cdot \nabla)\mathbb{A} - \mathbb{LA} - \mathbb{AL}^T  + \mathbb{A} - \mathbb{I} \right)  :  \tilde A  \, dx
+   \end{align}
+
+   where $\tilde v,\tilde p, \tilde A$ are test functions.
+
+*** Mathematica code  
+
+    Code for Taylor-Couette flow of Oldroyd-B is ~/tutorial/TaylorCouetteFlowOldroydB.nb~.
+   
+    We first say that we want to calculate in cylindrical coordinates and the used variables are $\rho,\theta,z$, also we define jacobian for cylindrical coordinates.
+    #+begin_src matlab
+  coordType = "Cylindrical";
+  vars = {ρ, θ, z};
+  Jac = ρ;
+    #+end_src
+
+    Furthermore we define velocity ~V~, pressure ~P~, conformation tensor ~𝔸~ and specify their special forms in Taylor-Couette flow e.g. the only non-zero component of velocity is $\theta$-component which can depend only on $\rho$.
+    #+begin_src matlab
+  V    = {0, vt[ρ] , 0};
+  TV   = {0, tvt[ρ], 0};
+  P    = p[ρ];
+  TP   = tp[ρ]; 
+  𝔸 =  {
+         {Arr[ρ], Art[ρ], 0},
+         {Art[ρ], Att[ρ], 0},
+	 {     0,      0, Azz[ρ]}
+	 };
+  t𝔸 = {
+         {tArr[ρ], tArt[ρ], 0},
+	 {tArt[ρ], tAtt[ρ], 0},
+	 {      0,       0, tAzz[ρ]}
+	 };
+    #+end_src
+   
+
+    Next we define other useful quantities such as velocity gradient or Cauchy stress tensor
+    #+begin_src matlab
+  𝕃 = Grad[V, vars, coordType];
+  𝔻 = 1/2 (𝕃+ Transpose@𝕃);
+  𝕀 = IdentityMatrix[3];
+  μ = 1;
+  𝕋 = -P 𝕀+  2 μ 𝔻+ (𝔸 - 𝕀);
+    #+end_src
+
+
+    Definitions of weak forms, ~weak1~ is momentum equation, ~weak2~ is continuity equation and ~weak3~ is evolution equation for $𝔸$. Since continuity equation is automatically satisfied we do not include it to the final list of weak forms ~weakForm~
+    #+begin_src matlab
+  weak1 = (𝕃 .V.TV + Tr[𝕋.Grad[TV, vars,coordType]]) Jac;
+  weak2 =  V.Grad[TP, vars,coordType];
+  weak3 = Tr[(Grad[𝔸, vars, coordType].V -𝕃. 𝔸 -𝔸.Transpose @𝕃 + (𝔸 - 𝕀)).t𝔸 ] Jac;
+  weakForm = {weak1, weak3};
+    #+end_src
+
+
+    Now we specify mesh used for computation, variable in which we do the numerical computation, unknown functions, boundary conditions - Dirichlet boundary conditions for velocity and no boundary conditions for components of 𝔸, test functions and as last we specify used finite elements.
+    #+begin_src matlab
+  mesh := "meshLine";
+  vars = {ρ};
+  funs = {vt, Arr, Art, Att, Azz};
+  bcs := {
+          {{1, 1}, {0, 2}},
+	  {},
+	  {},
+	  {},
+	  {}
+	  };
+  testFuns := {tvt, tArr, tArt, tAtt, tAzz}; 
+  femSpaces = {{"Lagrange", 1}, {"Lagrange", 1}, {"Lagrange", 1}, {"Lagrange", 1},{"Lagrange", 1}}; 
+    #+end_src
+
+
+    The last line just generates the python script
+    #+begin_src matlab
+  GenerateCode["TaylorCouetteFlowOldroydB", mesh, vars, funs, bcs, testFuns, femSpaces, weakForm];
+    #+end_src
+
+
+    The generated python script should display these plots [[file:img/dolfin_plot_0.png][plut vt]] [[file:img/dolfin_plot_1.png][plot Art]].
+
+
     
 
+** 
+** 

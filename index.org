@@ -9,7 +9,7 @@
 
 #+begin_html
 <div class="right">
-  <a href="https://github.com/lecopivo/MathematicaToFEniCS"> Go to project on GitHub</a>
+<a href="https://github.com/lecopivo/MathematicaToFEniCS"> Go to project on GitHub</a>
 </div>
 #+end_html
 
@@ -20,12 +20,105 @@
   :CATEGORY: intro
   :END:
 
-Test of math equation
-\begin{align}
-\int e^{-x^2} adsfadf \, dx
-\end{align}
+  The aim of this library is utilize symbolic power of [[https://www.wolfram.com/mathematica/][Wolfram Mathematica]] and numeric power of [[https://fenicsproject.org/][FEniCS]]. The ideal work-flow is that you define symbolic form of your PDE in a weak form in Mathematica and then you call single function which generates FEniCS script which solves this PDE numerically.
 
-Test number 2
+* Installation 
 
+  Just simply download ~MathematicaToFEniCS~ with git by command
+  =git clone https://github.com/lecopivo/MathematicaToFEniCS=
 
+**** TODO Mention files which needs to be added to paths for Mathematica and python
+
+* Examples
+
+** 1D Laplace
+   
+   For a start we will solve simple system of two coupled Laplace equations
+   \begin{equation}
+   \Delta u = 1-v 
+   \qquad 
+   \Delta v = u-1
+   \end{equation}
+   on the interval $[0,1]$ with boundary conditions $u(0)=u(1)=0$ and $v(0)=0,v(1)=0.5$.
+
+   Weak form of these equations is
+   \begin{equation}
+   0=  \int_0^1 \nabla u \cdot \nabla \tilde u  + (1-v) \tilde u \, dx 
+   \qquad
+   0=  \int_0^1 \nabla v \cdot \nabla \tilde v  + (u-1) \tilde v \, dx 
+   \end{equation}
+   where $\tilde u, \tilde v$ are test functions.
+
+   Note: We solve system of two equations because ~MathematicaToFEniCS~ for now does not support PDEs with only one unknown function.
+
+*** Mathematica code 
+
+    Open the Mathematica notebook in ~/tutorial/Laplace1D.nb~. We will now go line by line of this code and explain what it does.
+
+    It starts with the line
+    #+begin_src matlab
+    << (FileNameJoin[{NotebookDirectory[], "../MathematicaToFEniCS.m"}])
+    #+end_src 
+    which loads the ~MathematicaToFEniCS~ library.
+
+    Next line says on which mesh the calculation should be preformed
+    #+begin_src matlab
+    mesh := "meshLine";
+    #+end_src
+    It has to be a name of a python script which defines the mesh object which has the same name i.e. ~meshLine~ in this example and also it has to define object ~boundary_parts~ which is facet function on this mesh marking different boundary parts. Example of such a file is 
+    #+begin_src python
+    # file: meshLine.py
+    from dolfin import *
+
+    meshLine = IntervalMesh(100, 0, 1)
+    
+    # Create boundary markers
+    boundary_parts = FacetFunction('size_t', meshLine)
+    left   = AutoSubDomain(lambda x: near(x[0], lineMin))
+    right  = AutoSubDomain(lambda x: near(x[0], lineMax))
+    left  .mark(boundary_parts, 1)
+    right .mark(boundary_parts, 2)
+    #+end_src
+
+    Next two lines defines variables names, unknown functions and their corresponding test functions.
+    #+begin_src matlab
+    vars := {x}; 
+    funs := { u, v};
+    testFuns := {tu, tv};
+    #+end_src     
+
+    Now we define boundary conditions.
+    #+begin_src matlab
+    bcs := {
+    {{0, 1}, {0, 2}},
+    {{0, 1}, {0.5, 2}}
+    } 
+    #+end_src
+    Symbol ~bcs~ has to be a list whose n-th element describes boundary conditions of n-th function and it has to be a list of pairs in the form ~{value,boundary-id}~. So the first function $u$ has zero boundary condition on boundaries marked with ~1~ and ~2~, but the second function $v$ is zero on the boundary marked with ~1~ and $0.5$ on the boundary marked with ~2~.
+
+    Next we specify which finite elements will be used. ~femSpace~ is list of pairs where n-th pair specifies what type of finite element should be used for n-th function
+    #+begin_src matlab
+    femSpaces = {{"Lagrange", 1}, {"Lagrange", 2}};
+    #+end_src 
+    In this example we use Lagrange elements of order one for $u$ and of order 2 for $v$. For list of available finite element see [[https://fenicsproject.org/documentation/dolfin/dev/python/programmers-reference/functions/functionspace/FunctionSpace.html#dolfin.functions.functionspace.FunctionSpace][FEniCS web]].
+
+    The most important thing is to define weak forms of PDEs.
+    #+begin_src matlab
+    weak1 := Grad[u[x], vars].Grad[tu[x], vars] + (1 - v[x]) tu[x];
+    weak2 := Grad[v[x], vars].Grad[tv[x], vars] + (u[x] - 1) tv[x];
+    weakForm = {weak1, weak2};
+    #+end_src
+    
+    The last line of code generates python script called ~Laplace1D.py~
+    #+begin_src matlab
+    GenerateCode["Laplace1D", mesh, vars, funs, bcs, testFuns, femSpaces, weakForm];
+    #+end_src
+
+    
+    So if you execute notebook ~Laplace1D.nb~ a python script ~Laplace1D.py~ should appear in the same directory and when executed you should see two graphs [[file:img/dolfin_plot_3.png][plot u]] [[file:img/dolfin_plot_4.png][plot v]].
+
+***** TODO Mention ~Laplace1DExtra.py~
+
+***** TODO Make ~plot u~ and ~plot v~ as embedded images, not as links
+    
 

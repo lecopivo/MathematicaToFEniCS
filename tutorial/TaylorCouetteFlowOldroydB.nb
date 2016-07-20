@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      9675,        269]
-NotebookOptionsPosition[      9441,        256]
-NotebookOutlinePosition[      9775,        271]
-CellTagsIndexPosition[      9732,        268]
+NotebookDataLength[      9777,        272]
+NotebookOptionsPosition[      9543,        259]
+NotebookOutlinePosition[      9877,        274]
+CellTagsIndexPosition[      9834,        271]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -145,9 +145,11 @@ Cell[BoxData[{
      RowBox[{"(", "Jac", ")"}], " ", "in", " ", "the", " ", "weak", " ", 
      "form"}], " ", "*)"}], "\[IndentingNewLine]", 
    RowBox[{"weak2", " ", "=", " ", 
-    RowBox[{"V", ".", 
-     RowBox[{"Grad", "[", 
-      RowBox[{"TP", ",", "vars"}], "]"}]}]}], ";", 
+    RowBox[{
+     RowBox[{"V", ".", 
+      RowBox[{"Grad", "[", 
+       RowBox[{"TP", ",", "vars", ",", "coordType"}], "]"}]}], " ", "Jac"}]}],
+    ";", 
    RowBox[{"(*", " ", 
     RowBox[{
      RowBox[{
@@ -252,7 +254,8 @@ Cell[BoxData[{
    3.6780411740484333`*^9, 3.678041174424963*^9}, {3.678041295254855*^9, 
    3.678041300646694*^9}, {3.678041415648053*^9, 3.678041420807973*^9}, {
    3.678041451229759*^9, 3.6780414875327177`*^9}, {3.678041522217757*^9, 
-   3.6780415278168507`*^9}, {3.678041774141467*^9, 3.678041811676688*^9}}]
+   3.6780415278168507`*^9}, {3.678041774141467*^9, 3.678041811676688*^9}, {
+   3.678043662458624*^9, 3.678043667782839*^9}}]
 },
 WindowSize->{1918, 1003},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
@@ -270,7 +273,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 8879, 234, 1062, "Input"]
+Cell[558, 20, 8981, 237, 1062, "Input"]
 }
 ]
 *)

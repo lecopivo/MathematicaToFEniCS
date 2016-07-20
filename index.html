@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2016-07-21 Čt 00:43 -->
+<!-- 2016-07-21 Čt 00:48 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="viewport" content="width=device-width, initial-scale=1" />
 <title>MathematiceToFEniCS</title>
@@ -178,10 +178,12 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href="#orgheadline1">Introduction</a></li>
 <li><a href="#orgheadline2">Installation</a></li>
-<li><a href="#orgheadline10">Examples</a>
+<li><a href="#orgheadline12">Examples</a>
 <ul>
 <li><a href="#orgheadline4">1D Laplace</a></li>
 <li><a href="#orgheadline8">Oldroyd-B in Taylor-Couette flow</a></li>
+<li><a href="#orgheadline10"></a></li>
+<li><a href="#orgheadline11"></a></li>
 </ul>
 </li>
 </ul>
@@ -214,9 +216,9 @@ Just simply download <code>MathematicaToFEniCS</code> with git by command
 <ul class="org-ul"><li><a id="orgheadline3"></a><span class="todo TODO">TODO</span> Mention files which needs to be added to paths for Mathematica and python<br  /></li></ul>
 </div>
 
-<div id="outline-container-orgheadline10" class="outline-2">
-<h2 id="orgheadline10">Examples</h2>
-<div class="outline-text-2" id="text-orgheadline10">
+<div id="outline-container-orgheadline12" class="outline-2">
+<h2 id="orgheadline12">Examples</h2>
+<div class="outline-text-2" id="text-orgheadline12">
 </div><div id="outline-container-orgheadline4" class="outline-3">
 <h3 id="orgheadline4">1D Laplace</h3>
 <div class="outline-text-3" id="text-orgheadline4">
@@ -458,7 +460,7 @@ Definitions of weak forms, <code>weak1</code> is momentum equation, <code>weak2<
 <div class="org-src-container">
 
 <pre class="src src-matlab">weak1 = (𝕃 .V.TV + Tr[𝕋.Grad[TV, vars,coordType]]) Jac;
-weak2 =  V.Grad[TP, vars,coordType];
+weak2 =  V.Grad[TP, vars,coordType] Jac;
 weak3 = Tr[(Grad[𝔸, vars, coordType].V -𝕃. 𝔸 -𝔸.Transpose @𝕃 + (𝔸 - 𝕀)).t𝔸 ] Jac;
 weakForm = {weak1, weak3};
 </pre>
@@ -497,16 +499,27 @@ The last line just generates the python script
 
 
 <p>
-The generated python script should display these plots <a href="img/dolfin_plot_0.png">plut vt</a> <a href="img/dolfin_plot_1.png">plot Art</a>.</p>
+The generated python script should display these plots <a href="img/dolfin_plot_0.png">plut vt</a> <a href="img/dolfin_plot_1.png">plot Art</a>.
+</p>
 </div>
 </div>
+</div>
+
+
+
+
+<div id="outline-container-orgheadline10" class="outline-3">
+<h3 id="orgheadline10"></h3>
+</div>
+<div id="outline-container-orgheadline11" class="outline-3">
+<h3 id="orgheadline11"></h3>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2016-05-10</p>
 <p class="author">Author: Tomáš Skřivan</p>
-<p class="date">Created: 2016-07-21 Čt 00:43</p>
+<p class="date">Created: 2016-07-21 Čt 00:48</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

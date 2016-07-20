@@ -2,11 +2,11 @@ from dolfin import *
 from math import floor
 import mshr
 
-rMin = 0.1
-rMax = 0.3
-height = 1
+rMin = 1.1
+rMax = 2.1
+height = 2.0
 
-N = 20
+N = 8
 NX = N
 NY = int(N * height/(rMax-rMin))
 

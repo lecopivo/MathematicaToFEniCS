@@ -6,3 +6,4 @@ The goal is not to provide full interface to FEniCS from Mathematica but only ma
 
 The reason for this package is following. I can write down the equations in Mathematica easily but then writing them down in python can be pain. This can be especially true when I have system of many equations. Also Mathematica provides nice functions how to transform equations to different curvilinear coordinates systems and I do not want to rewrite them down in python by hand.
 
+Tutorial: http://lecopivo.github.io/MathematicaToFEniCS/

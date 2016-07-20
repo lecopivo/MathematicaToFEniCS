@@ -22,7 +22,7 @@
 
 Test of math equation
 \begin{align}
-\int e^{-x^2} \, dx
+\int e^{-x^2} adsfadf \, dx
 \end{align}
 
 Test number 2
